@@ -72,7 +72,35 @@
       </div>
     </div>
 
+    <script src="/socket.io/socket.io.js"></script>
     <script>
 
+        var socket = io.connect();
+        var $wall  = $('#wall');
+
+        var write = function(msg) {
+            $wall.append('<li>' + msg + '</li>');
+        };
+
+        socket.on('message', function(m) {
+            write( m );
+        });
+
+        socket.on('connect', function() {
+            console.log('connected');
+            socket.send('hello');
+        });
+
+        socket.on('error', function(e) {
+            console.log('--- ERROR ---');
+            console.log(e);
+        });
+
+        $('form').bind('submit', function(e) {
+            e.preventDefault();
+
+            socket.send($('#inp-txt').val());
+            $('#inp-txt').val('');
+        });
 
     </script>
