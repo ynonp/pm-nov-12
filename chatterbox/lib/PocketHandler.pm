@@ -13,7 +13,8 @@ sub run {
                 my $sender = shift;
                 my ( $message ) = @_;
 
-                $sender->send( $message );
+                # $sender->broadcast->emit( 'message', $message );
+                $sender->sockets->emit( 'message', $message );
             });
     }
 }
