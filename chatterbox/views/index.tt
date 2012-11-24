@@ -83,7 +83,7 @@
         };
 
         socket.on('message', function(m) {
-            write( m );
+            write( m.text );
         });
 
         socket.on('connect', function() {

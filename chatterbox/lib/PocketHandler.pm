@@ -14,7 +14,7 @@ sub run {
                 my ( $message ) = @_;
 
                 # $sender->broadcast->emit( 'message', $message );
-                $sender->sockets->emit( 'message', $message );
+                $sender->sockets->emit( 'message', { text => $message } );
             });
     }
 }

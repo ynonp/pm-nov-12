@@ -1,0 +1,106 @@
+  
+<!-- 
+    Credit goes to the Ruby on Rails team for this page 
+    has been heavily based on the default Rails page that is 
+    built with a scaffolded application.
+
+    Thanks a lot to them for their work.
+
+    See Ruby on Rails if you want a kickass framework in Ruby:
+    http://www.rubyonrails.org/
+-->
+
+<style>
+    header {
+background: rgb(201,222,150); /* Old browsers */
+background: -moz-linear-gradient(top,  rgba(201,222,150,1) 0%, rgba(138,182,107,1) 44%, rgba(57,130,53,1) 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(201,222,150,1)), color-stop(44%,rgba(138,182,107,1)), color-stop(100%,rgba(57,130,53,1))); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  rgba(201,222,150,1) 0%,rgba(138,182,107,1) 44%,rgba(57,130,53,1) 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  rgba(201,222,150,1) 0%,rgba(138,182,107,1) 44%,rgba(57,130,53,1) 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  rgba(201,222,150,1) 0%,rgba(138,182,107,1) 44%,rgba(57,130,53,1) 100%); /* IE10+ */
+background: linear-gradient(to bottom,  rgba(201,222,150,1) 0%,rgba(138,182,107,1) 44%,rgba(57,130,53,1) 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c9de96', endColorstr='#398235',GradientType=0 ); /* IE6-9 */
+color: white;        
+margin-bottom: 20px;
+    }
+
+    header h1 {
+        text-align: center;
+        padding: 10px;
+    }
+    h1 { padding: 0; margin: 0;}
+    body { padding: 0; margin: 0; }
+
+    .content ul {
+        list-style: none;
+        padding-left: 0;
+        padding: 5px;
+    }
+
+    .content ul li {
+        background: #a7a7a7;
+        padding: 20px;
+        border: 2px solid black;
+        width: 60px;
+        margin: 20px 5px;
+        cursor: pointer;
+        font-size: 1.5em;
+        -webkit-transition: all 0.5s;
+    }
+
+    .content h1 {
+        padding-left: 5px;
+        font-size: 2em;
+    }
+</style>
+
+<div id="page">
+    <header>
+        <h1>Voterbox</h1>
+    </header>
+
+    <div class="content">
+        <h1>What is your favorite programming language ?</h1>
+        <div class="votingarea">
+            <ul>
+                <li class="option" data-vote="perl">
+                    <div class="votes perl"></div>
+                    <span class="label">Perl</span>
+                </li>
+                <li class="option" data-vote="python">
+                    <div class="votes python"></div>
+                    <span class="label">Python</span>
+                </li>
+                <li class="option" data-vote="ruby">
+                    <div class="votes ruby"></div>
+                    <span class="label">Ruby</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+
+    <script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io.connect();
+
+        function set_data(voting_data) {
+            for ( data in voting_data ) {
+                $('.' + data).closest('li').css('width', voting_data[data] + 'px');
+            }
+        }
+
+        socket.on('votes', set_data );
+
+        $('.option').click(function(e) {
+            e.preventDefault();
+            var vote = $(this).attr('data-vote');
+            console.log("vote = " + vote);
+            socket.emit( 'vote', vote );
+        });
+
+        set_data( <%= voting_data %> );
+    </script>
+
+</div>

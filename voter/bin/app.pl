@@ -1,10 +1,11 @@
 #!/usr/bin/env perl
 use Dancer;
-use chatterbox;
+use voter;
 
 use Plack::Builder;
 use PocketIO;
 use Plack::App::File;
+use MyHandler;
 
 setting apphandler => 'PSGI';
 
@@ -20,9 +21,12 @@ BEGIN {
     unshift @INC, "$root/../../lib";
 }
 
+my $global_ref = {};
 
 my $app = sub {
     my $env     = shift;
+    $env->{global_ref} = $global_ref;
+
     my $request = Dancer::Request->new( env => $env );
     Dancer->dance($request);
 };
@@ -32,10 +36,11 @@ builder {
       Plack::App::File->new(file => "$root/public/javascripts/socket.io.js");
 
     mount '/socket.io' => PocketIO->new(
-        class => 'PocketHandler',
+        instance => MyHandler->new( global_ref => $global_ref ),
         method => 'run',
     );
 
     mount "/" => builder {$app};
 };
+
 
